@@ -1,3 +1,5 @@
+const validarEtapa = require("../validacao/validar-etapa");
+
 class Forca {
   //variavéis  
   vidas = 6; // 1. inicia com 6 vidas
@@ -7,7 +9,7 @@ class Forca {
   vetorLetrasChutadas = [];
   vetorLetrasAcertadas = [];
   vetorPalavraParcial = [];
-  vetorPalavraFinal = [];    
+  vetorPalavraFinal = [];     
   
   adicionaAoVetor(caracter) {
     this.vetorPalavraFinal.push(caracter);
@@ -22,25 +24,32 @@ class Forca {
   }
 
   chutar(letraChutada) {
-    //Só vai diminuir uma vida se a letra chutada não for encontrada no vetor da letras chutadas (chutando ele pela primeira vez)
+    //4. Só vai diminuir uma vida se a letra chutada não for encontrada no vetor da letras chutadas (chutando ele pela primeira vez)
     // e a palavra correta não contiver a letra chutada
     if ((this.vetorLetrasChutadas.includes(letraChutada) == false) && (this.vetorPalavraFinal.includes(letraChutada) == false)) {
-      this.vidas = this.vidas - 1;
+      //6. subtrair uma vida
+     this.vidas = this.vidas - 1;
     }
-    //não entrando na condição acima, incrementa no vetor 
+    //3. não entrando na condição acima, incrementa no vetor 
     this.vetorLetrasChutadas.push(letraChutada);
 
-    //só adiciona a letra se encontrar no vetor parcial
+    //só adiciona a letra no vetor letras acertadas, se a letra estiver no vetor parcial,
+    // a medida que vai incrementando no letras acertadas vai removendo do vetor parcial
+    // até o vetor final bater palavra correta instanciada com a classe Forca
     if (this.vetorPalavraParcial.includes(letraChutada)==true) {
       do {
-        this.vetorLetrasAcertadas.splice(this.vetorPalavraParcial.indexOf(letraChutada), 1, letraChutada); //adiciona a letra na posição correta
-        this.vetorPalavraParcial.splice(this.vetorPalavraParcial.indexOf(letraChutada), 1, null); //remove de vetor parcial
+        //adiciona a letra na posição correta
+        this.vetorLetrasAcertadas.splice(this.vetorPalavraParcial.indexOf(letraChutada), 1, letraChutada); 
+        //remove de vetor parcial
+        this.vetorPalavraParcial.splice(this.vetorPalavraParcial.indexOf(letraChutada), 1, null); 
+        
+        
       } while (this.vetorPalavraParcial.includes(letraChutada));
     }
 
     this.buscarEstado();
     //console.log(this.buscarEstado());
-    //console.log(this.vetorLetrasAcertada);
+    //console.log(this.vetorLetrasAcertadas);
     //console.log(this.vetorPalavraFinal);
     //console.log(this.vetorPalavraParcial);
   }
@@ -48,14 +57,18 @@ class Forca {
   buscarEstado() {
     var final = this.vetorPalavraFinal.join();
     var palavraCorreta = this.vetorLetrasAcertadas.join();
-    // 2. inicia com aguardando chute    
-    if (final == palavraCorreta) {
-      this.estado = this.vetorEstados[0];
-    } else if (this.vidas <= 0) {
+    // 2. inicia com aguardando chute
+    if (this.vidas>0 && final == palavraCorreta)  {
+      //9. "ganhou" se acertar a palavra  
+      this.estado = this.vetorEstados[0];        
+      } 
+    else if (this.vidas <= 0) {
+      //8. "perdeu" se terminar as vidas
       this.estado = this.vetorEstados[1];
     } else {
+      //senão ganhou e não perdeu. Está "aguardando chute"
       this.estado = this.vetorEstados[2];
-    }
+    }          
     return this.estado;
     // Possiveis valores: "perdeu", "aguardando chute" ou "ganhou"
   }

@@ -8,5 +8,12 @@ while (!["perdeu", "ganhou"].includes(jogo.buscarEstado())) {
     jogo.chutar(chute);
     console.log(jogo.buscarDadosDoJogo());
 }
+if(jogo.buscarEstado().toString() == "perdeu") {
+	console.log("Meus pêsames. Você perdeu")
+	
+}	else if(jogo.buscarEstado().toString() == "ganhou") {
+	console.log("PARABÉNS. Você ganhou.");
+}
 
-console.log("você " + jogo.buscarEstado());
+//console.log("você " + jogo.buscarEstado());
+
